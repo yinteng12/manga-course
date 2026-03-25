@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pen</title>
+  </head>
+  <body>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>漫·画·课 | 漫画课程体系 · 画室</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700;900&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --ink: #1e130c;
+    --paper: #fef7e8;
+    --red: #b52b1a;
+    --gold: #c9921f;
+    --light-ink: #6f4e2e;
+    --panel-bg: #fffbf0;
+    --border: #dac29c;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Serif SC', 'ZCOOL XiaoWei', serif;
+    overflow-x: hidden;
+  }
+
+  /* 漫画分格背景 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* 头部区域 */
+  .manga-header {
+    position: relative;
+    z-index: 2;
+    padding: 56px 32px 48px;
+    text-align: center;
+    border-bottom: 4px solid var(--ink);
+    background: linear-gradient(145deg, rgba(255,247,224,0.4) 0%, rgba(254,247,232,0) 100%);
+  }
+
+  .speed-lines {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .speed-lines::after {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: -20%;
+    width: 140%;
+    height: 180%;
+    background: repeating-linear-gradient(115deg, 
+      rgba(201,146,31,0.08) 0px, 
+      rgba(201,146,31,0.08) 4px,
+      transparent 4px,
+      transparent 12px);
+    transform: rotate(-8deg);
+    pointer-events: none;
+  }
+
+  .title-badge {
+    display: inline-block;
+    background: var(--red);
+    color: white;
+    font-size: 12px;
+    letter-spacing: 4px;
+    padding: 6px 22px;
+    border-radius: 30px;
+    margin-bottom: 24px;
+    font-weight: 500;
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+
+  h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(46px, 10vw, 88px);
+    font-weight: 900;
+    letter-spacing: 8px;
+    color: var(--ink);
+    text-shadow: 5px 5px 0 var(--gold);
+    margin-bottom: 12px;
+    line-height: 1.1;
+  }
+
+  .subhead {
+    font-size: 14px;
+    letter-spacing: 4px;
+    color: var(--light-ink);
+    margin-top: 16px;
+    border-top: 1px solid var(--border);
+    display: inline-block;
+    padding-top: 14px;
+  }
+
+  /* 拟声浮动元素 */
+  .onomatopoeia {
+    position: absolute;
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 900;
+    color: var(--gold);
+    opacity: 0.5;
+    pointer-events: none;
+    font-size: 26px;
+    z-index: 1;
+    animation: floatDrift 5s ease-in-out infinite;
+  }
+  @keyframes floatDrift {
+    0%,100% { transform: translate(0,0) rotate(var(--rot, 0deg)); }
+    50% { transform: translate(6px, -10px) rotate(var(--rot, 0deg)); }
+  }
+
+  /* 引言气泡区 */
+  .intro-area {
+    position: relative;
+    z-index: 2;
+    max-width: 820px;
+    margin: 48px auto 32px;
+    padding: 0 24px;
+  }
+  .speech-bubble {
+    background: white;
+    border: 2.5px solid var(--ink);
+    border-radius: 32px 32px 32px 16px;
+    padding: 24px 32px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--light-ink);
+    box-shadow: 6px 6px 0 var(--ink);
+    position: relative;
+  }
+  .speech-bubble::before {
+    content: '';
+    position: absolute;
+    bottom: -18px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    border-left: 14px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 20px solid var(--ink);
+  }
+  .teacher-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 20px;
+    padding-left: 12px;
+  }
+  .avatar {
+    width: 52px;
+    height: 52px;
+    background: var(--ink);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    border: 2px solid var(--gold);
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+
+  /* 课程主容器 */
+  .courses-container {
+    position: relative;
+    z-index: 2;
+    max-width: 1280px;
+    margin: 32px auto 70px;
+    padding: 0 24px 40px;
+  }
+
+  .section-divider {
+    text-align: center;
+    margin: 20px 0 44px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .section-divider span {
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--light-ink);
+    background: var(--paper);
+    padding: 0 12px;
+  }
+  .section-divider::before,
+  .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+  }
+
+  /* 卡片通用样式 */
+  .level-card {
+    background: var(--panel-bg);
+    border: 2.5px solid var(--ink);
+    margin-bottom: 52px;
+    position: relative;
+    box-shadow: 8px 8px 0 var(--ink);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .level-card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 12px 12px 0 var(--ink);
+  }
+  .card-header {
+    display: flex;
+    border-bottom: 2px solid var(--ink);
+    flex-wrap: wrap;
+  }
+  .level-badge {
+    font-weight: 900;
+    font-size: 58px;
+    font-family: 'Noto Serif SC', serif;
+    padding: 16px 28px;
+    border-right: 2px solid var(--ink);
+    min-width: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    position: relative;
+  }
+  .level-1-bg { background: #3679b5; }
+  .level-2-bg { background: #2f8b4c; }
+  .level-3-bg { background: #dc843a; }
+  .level-badge .jp-badge {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    font-size: 10px;
+    opacity: 0.8;
+    writing-mode: horizontal-tb;
+  }
+  .title-info {
+    padding: 18px 24px;
+    flex: 1;
+  }
+  .age-tag {
+    display: inline-block;
+    border: 1.5px solid;
+    font-size: 11px;
+    padding: 3px 14px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .level-title-main {
+    font-size: clamp(22px, 5vw, 30px);
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .level-sub {
+    font-size: 13px;
+    color: var(--light-ink);
+  }
+
+  /* 模块网格 */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0;
+  }
+  .module-item {
+    padding: 18px 20px;
+    border-right: 1.5px solid var(--border);
+    border-bottom: 1.5px solid var(--border);
+    transition: background 0.12s;
+  }
+  .module-item:hover {
+    background: rgba(201,146,31,0.08);
+  }
+  .module-number {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .module-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .module-desc {
+    font-size: 11.5px;
+    line-height: 1.55;
+    color: var(--light-ink);
+  }
+  .tag {
+    display: inline-block;
+    font-size: 9px;
+    margin-top: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: #f0e9dc;
+    color: #7a5a3a;
+  }
+
+  /* 成果行 */
+  .outcome-row {
+    border-top: 2px solid var(--ink);
+    padding: 14px 24px;
+    background: #fcf6ea;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+  .outcome-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 4px 12px;
+    border-radius: 30px;
+  }
+  .outcome-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .chip {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 4px 12px;
+    font-size: 11px;
+    border-radius: 30px;
+  }
+
+  /* 理念区域 */
+  .philosophy {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 64px 32px;
+    text-align: center;
+    margin-top: 20px;
+    position: relative;
+    z-index: 2;
+    border-top: 5px solid var(--gold);
+    border-bottom: 5px solid var(--gold);
+  }
+  .philosophy h2 {
+    font-size: clamp(28px,6vw,48px);
+    font-weight: 800;
+    margin-bottom: 16px;
+    text-shadow: 2px 2px 0 var(--gold);
+  }
+  .philosophy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    gap: 28px;
+    max-width: 1000px;
+    margin: 48px auto 0;
+  }
+  .phil-card {
+    border: 1.5px solid rgba(255,245,215,0.3);
+    padding: 24px 12px;
+    transition: 0.2s;
+  }
+  .phil-card:hover {
+    border-color: var(--gold);
+  }
+  .phil-icon {
+    font-size: 38px;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .phil-title {
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: var(--gold);
+  }
+
+  footer {
+    background: var(--paper);
+    text-align: center;
+    padding: 28px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    border-top: 2px solid var(--border);
+    color: var(--light-ink);
+  }
+
+  /* 入场动画 */
+  .level-card {
+    opacity: 0;
+    transform: translateY(28px);
+    animation: fadeUp 0.55s forwards;
+  }
+  .level-card:nth-child(1) { animation-delay: 0.05s; }
+  .level-card:nth-child(2) { animation-delay: 0.15s; }
+  .level-card:nth-child(3) { animation-delay: 0.25s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 680px) {
+    .card-header {
+      flex-direction: column;
+    }
+    .level-badge {
+      border-right: none;
+      border-bottom: 2px solid var(--ink);
+      padding: 12px 20px;
+      justify-content: space-between;
+      font-size: 44px;
+    }
+    .modules-grid {
+      grid-template-columns: 1fr;
+    }
+    .manga-header {
+      padding: 40px 16px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="manga-header">
+  <div class="speed-lines"></div>
+  <div class="onomatopoeia" style="top: 15px; left: 5%; --rot:-6deg;">✧ 咻！</div>
+  <div class="onomatopoeia" style="bottom: 8px; right: 6%; --rot:9deg; animation-duration: 6s;">✧ 咚！</div>
+  <div class="onomatopoeia" style="top: 40%; left: 90%; --rot:12deg; font-size: 22px;">啪</div>
+
+  <div class="title-badge">✦ 专业漫画课程体系 ✦</div>
+  <h1>漫·画·课</h1>
+  <div class="subhead">从零基础 · 到自由创作 · 8岁～17岁</div>
+</header>
+
+<div class="intro-area">
+  <div class="speech-bubble">
+    🎙️ 「欢迎来到漫画教室！」无论你是第一次握笔，还是已经画过很多角色，这里都有专属于你的阶梯。<br>
+    我们将从<strong>线条与想象</strong>开始，一路进阶至<strong>世界观与完整故事</strong>。三个阶段，每个阶段都是扎实的冒险。
+  </div>
+  <div class="teacher-row">
+    <div class="avatar">🎨</div>
+    <span style="font-size: 13px; color: var(--light-ink);">漫画课导师 · 林老师</span>
+  </div>
+</div>
+
+<div class="courses-container">
+  <div class="section-divider"><span>▍ 课程阶段 ▍</span></div>
+
+  <!-- 阶段 1 -->
+  <div class="level-card">
+    <div class="card-header">
+      <div class="level-badge level-1-bg">壹<span class="jp-badge">LEVEL 1</span></div>
+      <div class="title-info">
+        <div class="age-tag" style="border-color:#3679b5; color:#3679b5;">8 — 10 岁</div>
+        <div class="level-title-main">漫画启蒙：线条与想象</div>
+        <div class="level-sub">零基础入门 · 认识漫画世界 · 画出第一个角色</div>
+      </div>
+    </div>
+    <div class="modules-grid">
+      <div class="module-item"><div class="module-number">01</div><div class="module-title">线条练习与基础色彩</div><div class="module-desc">线条的力度、节奏与简单色彩情感，培养画笔自信。</div><span class="tag">✎ 基础绘画</span></div>
+      <div class="module-item"><div class="module-number">02</div><div class="module-title">Q版五官</div><div class="module-desc">漫画眼睛、嘴巴的夸张变形，Q版表情初步。</div><span class="tag">角色头部</span></div>
+      <div class="module-item"><div class="module-number">03</div><div class="module-title">表情设计</div><div class="module-desc">喜怒哀乐+汗滴/青筋符号，情绪表现力训练。</div><span class="tag">表情设计</span></div>
+      <div class="module-item"><div class="module-number">04</div><div class="module-title">发型画法</div><div class="module-desc">短发、长发、双马尾等8种发型，塑造角色性格。</div><span class="tag">角色设计</span></div>
+      <div class="module-item"><div class="module-number">05</div><div class="module-title">Q版人物比例</div><div class="module-desc">2头身Q版，站立、坐下、举手动态练习。</div><span class="tag">角色比例</span></div>
+      <div class="module-item"><div class="module-number">06</div><div class="module-title">Q版造型训练</div><div class="module-desc">综合五官发型，设计独特Q版角色与小道具。</div><span class="tag">造型训练</span></div>
+      <div class="module-item"><div class="module-number">07</div><div class="module-title">卡通人物造型</div><div class="module-desc">从Q版进阶到3-4头身，卡通风格演变。</div><span class="tag">造型进阶</span></div>
+      <div class="module-item"><div class="module-number">08</div><div class="module-title">角色三视图</div><div class="module-desc">正面/侧面/背面，建立立体角色设计思维。</div><span class="tag">三视图</span></div>
+      <div class="module-item"><div class="module-number">09</div><div class="module-title">漫画语言基础</div><div class="module-desc">分格、对话框、拟声词入门，漫画的叙事规则。</div><span class="tag">漫画语言</span></div>
+      <div class="module-item"><div class="module-number">10</div><div class="module-title">4格漫画</div><div class="module-desc">起承转合结构，完成第一本原创4格漫画。</div><span class="tag">叙事创作</span></div>
+      <div class="module-item"><div class="module-number">11</div><div class="module-title">动物创意设计</div><div class="module-desc">动物特征Q版化，创造原创怪物/伙伴角色。</div><span class="tag">创意设计</span></div>
+      <div class="module-item"><div class="module-number">12</div><div class="module-title">不同年龄的呈现</div><div class="module-desc">幼儿、少年、老人头身比差异表现。</div><span class="tag">年龄表现</span></div>
+      <div class="module-item"><div class="module-number">13</div><div class="module-title">多角度画法</div><div class="module-desc">正面/3/4侧面/侧面转换，保持角色辨识度。</div><span class="tag">多角度</span></div>
+      <div class="module-item"><div class="module-number">14</div><div class="module-title">简单肢体动作</div><div class="module-desc">跑、跳、挥手、坐下，重心线与动势基础。</div><span class="tag">动态基础</span></div>
+      <div class="module-item"><div class="module-number">15</div><div class="module-title">装备道具设计</div><div class="module-desc">武器、魔法物品简化画法，标志性道具构思。</div><span class="tag">道具设计</span></div>
+      <div class="module-item"><div class="module-number">16</div><div class="module-title">服装设计初阶</div><div class="module-desc">制服、魔法袍等基础褶皱与服装性格化。</div><span class="tag">服装设计</span></div>
+      <div class="module-item"><div class="module-number">17</div><div class="module-title">情绪加动作</div><div class="module-desc">全身表达情绪，愤怒、害羞、兴奋的综合姿势。</div><span class="tag">情绪表达</span></div>
+      <div class="module-item"><div class="module-number">18</div><div class="module-title">场景设计初阶</div><div class="module-desc">室内/外简单背景，前景/中景/远景意识。</div><span class="tag">场景设计</span></div>
+      <div class="module-item"><div class="module-number">19</div><div class="module-title">特效画法</div><div class="module-desc">速度线、爆炸光效，增添画面动感。</div><span class="tag">特效技法</span></div>
+      <div class="module-item"><div class="module-number">20</div><div class="module-title">8格漫画创作</div><div class="module-desc">综合运用所有技法，完成8格完整短篇漫画。</div><span class="tag">综合创作</span></div>
+    </div>
+    <div class="outcome-row">
+      <span class="outcome-label">学完能力</span>
+      <div class="outcome-chips">
+        <span class="chip">独立绘制Q版角色</span>
+        <span class="chip">完成4-8格故事</span>
+        <span class="chip">三视图设定</span>
+        <span class="chip">简单对话框叙事</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 阶段 2 -->
+  <div class="level-card">
+    <div class="card-header">
+      <div class="level-badge level-2-bg">贰<span class="jp-badge">LEVEL 2</span></div>
+      <div class="title-info">
+        <div class="age-tag" style="border-color:#2f8b4c; color:#2f8b4c;">11 — 13 岁</div>
+        <div class="level-title-main">人物进阶：比例与个性</div>
+        <div class="level-sub">人体结构 · 个性角色塑造 · 黑白技法与叙事提升</div>
+      </div>
+    </div>
+    <div class="modules-grid">
+      <div class="module-item"><div class="module-number">01</div><div class="module-title">脸型五官设计</div><div class="module-desc">不同脸型与五官组合，角色高识别度来源。</div><span class="tag">头部设计</span></div>
+      <div class="module-item"><div class="module-number">02</div><div class="module-title">人体比例</div><div class="module-desc">4-6头身画法，火柴人→几何体→线稿步骤。</div><span class="tag">人体结构</span></div>
+      <div class="module-item"><div class="module-number">03</div><div class="module-title">发型设计进阶</div><div class="module-desc">头发层次、流向，多角度发型统一性。</div><span class="tag">发型进阶</span></div>
+      <div class="module-item"><div class="module-number">04</div><div class="module-title">动态姿势</div><div class="module-desc">重心与动势线，跑跳、战斗等生动姿势。</div><span class="tag">动态速写</span></div>
+      <div class="module-item"><div class="module-number">05</div><div class="module-title">角色练习系统</div><div class="module-desc">不同角色临摹转原创，建立角色库。</div><span class="tag">角色练习</span></div>
+      <div class="module-item"><div class="module-number">06</div><div class="module-title">黑白人物技法</div><div class="module-desc">排线、填黑，塑造立体感与光影氛围。</div><span class="tag">黑白技法</span></div>
+      <div class="module-item"><div class="module-number">07</div><div class="module-title">服装褶皱与设计</div><div class="module-desc">布纹规律，日常/战斗服设计表达个性。</div><span class="tag">服装设计</span></div>
+      <div class="module-item"><div class="module-number">08</div><div class="module-title">道具多角度展示</div><div class="module-desc">武器/装备三视图，道具与角色故事关联。</div><span class="tag">道具设计</span></div>
+      <div class="module-item"><div class="module-number">09</div><div class="module-title">角色设计三视图</div><div class="module-desc">正面、3/4侧面、背面，完整设定集页。</div><span class="tag">三视图</span></div>
+      <div class="module-item"><div class="module-number">10</div><div class="module-title">黑白8格漫画</div><div class="module-desc">光影分镜，用黑白灰表现故事张力。</div><span class="tag">黑白叙事</span></div>
+      <div class="module-item"><div class="module-number">11</div><div class="module-title">服装加动作</div><div class="module-desc">运动中服装形变，布料与动态融合。</div><span class="tag">服装动态</span></div>
+      <div class="module-item"><div class="module-number">12</div><div class="module-title">不同年龄进阶</div><div class="module-desc">儿童到老年体型、比例深化练习。</div><span class="tag">年龄表现</span></div>
+      <div class="module-item"><div class="module-number">13</div><div class="module-title">情绪与肢体进阶</div><div class="module-desc">复杂情绪（尴尬、嫉妒）全身姿态设计。</div><span class="tag">情绪表达</span></div>
+      <div class="module-item"><div class="module-number">14</div><div class="module-title">动作特效进阶</div><div class="module-desc">冲击波、魔法阵、速度线组合，增强冲击力。</div><span class="tag">特效进阶</span></div>
+      <div class="module-item"><div class="module-number">15</div><div class="module-title">人物透视</div><div class="module-desc">仰视/俯视角度，透视缩短画法。</div><span class="tag">人物透视</span></div>
+      <div class="module-item"><div class="module-number">16</div><div class="module-title">场景透视</div><div class="module-desc">一点/两点透视，将角色融入空间。</div><span class="tag">场景透视</span></div>
+      <div class="module-item"><div class="module-number">17</div><div class="module-title">动物画法</div><div class="module-desc">猫狗等写实漫画风格动物结构。</div><span class="tag">动物绘制</span></div>
+      <div class="module-item"><div class="module-number">18</div><div class="module-title">拟人角色设计</div><div class="module-desc">兽人/拟人化角色，融合动物特征。</div><span class="tag">拟人设计</span></div>
+      <div class="module-item"><div class="module-number">19</div><div class="module-title">镜头语言与叙事</div><div class="module-desc">远景/特写/分镜节奏，控制故事张力。</div><span class="tag">镜头语言</span></div>
+      <div class="module-item"><div class="module-number">20</div><div class="module-title">16格彩色漫画</div><div class="module-desc">完整16页短篇全流程，从草稿到上色。</div><span class="tag">综合创作</span></div>
+    </div>
+    <div class="outcome-row">
+      <span class="outcome-label">学完能力</span>
+      <div class="outcome-chips">
+        <span class="chip">准确人体与动态</span>
+        <span class="chip">16格漫画创作</span>
+        <span class="chip">透视场景绘制</span>
+        <span class="chip">专业角色设定集</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 阶段 3 -->
+  <div class="level-card">
+    <div class="card-header">
+      <div class="level-badge level-3-bg">叁<span class="jp-badge">LEVEL 3</span></div>
+      <div class="title-info">
+        <div class="age-tag" style="border-color:#dc843a; color:#dc843a;">14 — 17 岁</div>
+        <div class="level-title-main">世界构建：风格与叙事</div>
+        <div class="level-sub">个人风格 · 深度世界观 · 完整章节漫画制作</div>
+      </div>
+    </div>
+    <div class="modules-grid">
+      <div class="module-item"><div class="module-number">01</div><div class="module-title">风格研究</div><div class="module-desc">少年/少女/悬疑/奇幻流派分析，临摹到个人化。</div><span class="tag">风格研究</span></div>
+      <div class="module-item"><div class="module-number">02</div><div class="module-title">服装文化研究</div><div class="module-desc">时代/架空世界服装体系设计。</div><span class="tag">服装研究</span></div>
+      <div class="module-item"><div class="module-number">03</div><div class="module-title">头部光影进阶</div><div class="module-desc">多光源戏剧性表达，情绪与氛围强化。</div><span class="tag">头部深化</span></div>
+      <div class="module-item"><div class="module-number">04</div><div class="module-title">人体肌肉组织</div><div class="module-desc">主要肌肉群与体表轮廓，力量感塑造。</div><span class="tag">解剖结构</span></div>
+      <div class="module-item"><div class="module-number">05</div><div class="module-title">肌肉动态变化</div><div class="module-desc">拉伸/收缩时肌肉表现，复杂动态可信度。</div><span class="tag">肌肉动态</span></div>
+      <div class="module-item"><div class="module-number">06</div><div class="module-title">形态变化设计</div><div class="module-desc">变身/进化/受伤后形态，戏剧性转变。</div><span class="tag">形态设计</span></div>
+      <div class="module-item"><div class="module-number">07</div><div class="module-title">动态打斗设计</div><div class="module-desc">冲击力分镜，透视与特效配合战斗场面。</div><span class="tag">动态打斗</span></div>
+      <div class="module-item"><div class="module-number">08</div><div class="module-title">个人风格寻找</div><div class="module-desc">风格实验速写，确立独特画面语言。</div><span class="tag">风格确立</span></div>
+      <div class="module-item"><div class="module-number">09</div><div class="module-title">角色群像设计</div><div class="module-desc">主角/配角/对手对比原则，角色关系网。</div><span class="tag">角色群像</span></div>
+      <div class="module-item"><div class="module-number">10</div><div class="module-title">世界观构建</div><div class="module-desc">世界地图、势力徽标、规则设定文档。</div><span class="tag">世界设计</span></div>
+      <div class="module-item"><div class="module-number">11</div><div class="module-title">剧本写作</div><div class="module-desc">三幕结构，冲突弧线，完整漫画剧本。</div><span class="tag">剧本创作</span></div>
+      <div class="module-item"><div class="module-number">12</div><div class="module-title">封面设计</div><div class="module-desc">标题字、主视觉构图，商业级封面绘制。</div><span class="tag">封面设计</span></div>
+      <div class="module-item"><div class="module-number">13</div><div class="module-title">场景深度叙事</div><div class="module-desc">用场景埋伏笔、传递情绪，大氛围场景。</div><span class="tag">场景深化</span></div>
+      <div class="module-item"><div class="module-number">14</div><div class="module-title">专业分镜</div><div class="module-desc">导演思维，画面构图与节奏控制实战。</div><span class="tag">分镜设计</span></div>
+      <div class="module-item"><div class="module-number">15</div><div class="module-title">完整章节漫画</div><div class="module-desc">从剧本、分镜、线稿到完稿，呈现原创故事章节。</div><span class="tag">章节创作</span></div>
+    </div>
+    <div class="outcome-row">
+      <span class="outcome-label">学完能力</span>
+      <div class="outcome-chips">
+        <span class="chip">完成章节漫画</span>
+        <span class="chip">原创世界观设定集</span>
+        <span class="chip">个人风格确立</span>
+        <span class="chip">专业分镜与剧本</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="philosophy">
+  <h2>✧ 漫画教室理念 ✧</h2>
+  <p style="max-width:620px; margin:0 auto; line-height:1.7;">漫画是视觉与故事的合奏。我们坚信每个孩子都有独特的表达欲，课程不仅传授技法，更保护创造力。</p>
+  <div class="philosophy-grid">
+    <div class="phil-card"><span class="phil-icon">✏️</span><div class="phil-title">从兴趣出发</div><div style="font-size:13px;">将热爱转化为持续动力，让漫画融入日常。</div></div>
+    <div class="phil-card"><span class="phil-icon">📖</span><div class="phil-title">系统化进阶</div><div style="font-size:13px;">模块环环相扣，清晰的成长地图。</div></div>
+    <div class="phil-card"><span class="phil-icon">🎭</span><div class="phil-title">技法与故事并重</div><div style="font-size:13px;">画技与叙事双修，成为真正的漫画讲述者。</div></div>
+    <div class="phil-card"><span class="phil-icon">🌟</span><div class="phil-title">每个人都有自己的风格</div><div style="font-size:13px;">拒绝复制粘贴，鼓励独一无二的视觉语言。</div></div>
+  </div>
+</div>
+
+<footer>
+  ✦ 漫画课程体系 · 画室原创 ✦ &nbsp;|&nbsp; 8岁 → 17岁 · 三个阶段 · 从零基础到独立创作
+</footer>
+
+</body>
+</html>
